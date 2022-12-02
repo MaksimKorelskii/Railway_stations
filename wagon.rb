@@ -1,5 +1,6 @@
 class Wagon
   include Company
+  include Validation
 
   NUMBER_FORMAT = /^[1-9][0-9]?$/.freeze # от 1 до 99
 
@@ -11,18 +12,15 @@ class Wagon
     validate!
   end
 
-  def valid?
-    validate!
-    true
-  rescue
-    false
-  end
-
   protected
 
   def validate!
-    raise "Не указан номер вагона" if number == ""
-    raise "Не указано название компании изготовителя вагона" if company == ""
-    raise "Неверный формат номера вагона" if number !~ NUMBER_FORMAT
+    errors = []
+
+    errors << "Не указан номер вагона" if number == ""
+    errors << "Не указано название компании изготовителя вагона" if company == ""
+    errors << "Неверный формат номера вагона" if number !~ NUMBER_FORMAT
+
+    raise errors.join('. ') unless errors.empty?
   end
 end

@@ -1,3 +1,4 @@
+require_relative 'validation'
 require_relative 'instance_counter'
 require_relative 'company'
 require_relative 'wagon'

@@ -1,6 +1,7 @@
 class Train
   include Company
   include InstanceCounter
+  include Validation
 
   ID_FORMAT = /^[0-9a-zа-я]{3}-?[0-9a-zа-я]{2}$/i.freeze # формат ххх-хх
 
@@ -15,16 +16,9 @@ class Train
     @wagons = []
     @route = nil
     @company = company
-    @@trains << self
+    validate!
     register_instance
-    validate!
-  end
-
-  def valid?
-    validate!
-    true
-  rescue
-    false
+    @@trains << self
   end
 
   def self.find(id)
@@ -96,10 +90,14 @@ class Train
   protected
 
   def validate!
-    raise RuntimeError, "Не указан номер поезда" if id == ""
-    raise RuntimeError, "Не указано название компании изготовителя поезда" if company == ""
-    raise RuntimeError, "Неверный формат номера поезда" if id !~ ID_FORMAT
-    raise RuntimeError, "Вы не указали тип поезда. Введите: passenger или cargo" if type.nil?
-    raise RuntimeError, "Неверный тип поезда. Введите: passenger или cargo" unless [:passenger, :cargo].include?(@type)
+    errors = []
+
+    errors << "Не указан номер поезда" if id == ""
+    errors << "Не указано название компании изготовителя поезда" if company == ""
+    errors << "Неверный формат номера поезда" if id !~ ID_FORMAT
+    errors << "Вы не указали тип поезда. Введите: passenger или cargo" if type.nil?
+    errors << "Неверный тип поезда, введите: passenger или cargo" unless [:passenger, :cargo].include?(@type)
+  
+    raise errors.join('. ') unless errors.empty?
   end
 end

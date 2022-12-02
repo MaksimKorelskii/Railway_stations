@@ -1,19 +1,13 @@
 class Route
   include InstanceCounter
+  include Validation
 
   attr_reader :stations, :start_station, :finish_station
 
   def initialize(start_station, finish_station)
     @stations = [start_station, finish_station]
+    validate!
     register_instance
-    validate!
-  end
-
-  def valid?
-    validate!
-    true
-  rescue
-    false
   end
 
   def first_station
@@ -44,7 +38,11 @@ class Route
   private
 
   def validate!
-    raise 'Не указана начальная станция маршрута' if start_station == ''
-    raise 'Не указана конечная станция маршрута' if finish_station == ''
+    errors = []
+
+    errors << 'Не указана начальная станция маршрута' if start_station == ''
+    errors << 'Не указана конечная станция маршрута' if finish_station == ''
+
+    raise errors.join('. ') unless errors.empty?
   end
 end
