@@ -72,8 +72,6 @@ class Main
                  TrainPassenger.new(id, type, company)
                else type == :cargo
                  TrainCargo.new(id, type, company) # любой некорретный тип уходит сюда
-              #  else
-              #    puts 'Поезд не создан'
                end
     puts "#{type.capitalize} поезд #{id} успешно создан. Производитель: #{company}."
     rescue RuntimeError => e
