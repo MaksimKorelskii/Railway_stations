@@ -6,6 +6,14 @@ class Route
   def initialize(start_station, finish_station)
     @stations = [start_station, finish_station]
     register_instance
+    validate!
+  end
+
+  def valid?
+    validate!
+    true
+  rescue
+    false
   end
 
   def first_station
@@ -31,5 +39,12 @@ class Route
     elsif stations.include?(station)
       stations.delete(station)
     end
+  end
+
+  private
+
+  def validate!
+    raise 'Не указана начальная станция маршрута' if start_station == ''
+    raise 'Не указана конечная станция маршрута' if finish_station == ''
   end
 end

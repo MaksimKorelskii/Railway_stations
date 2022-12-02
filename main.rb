@@ -58,25 +58,27 @@ class Main
     name = ask('Введите название станции')
     @stations << Station.new(name)
     puts "Станция #{name} успешно создана."
+  rescue RuntimeError => e
+    puts e.message
+    retry    
   end
 
   # создавать поезда
   def new_train
-    id = ask('Введите номер поезда')
-    type = ask('Введите тип поезда: пассажирский или грузовой')
+    id = ask('Введите номер поезда, согласно формату ххх-хх')
+    type = ask_symbol('Введите тип поезда: passenger или cargo')
     company = ask('Введите название производителя поезда')
-    @trains << if type == 'пассажирский'
+    @trains << if type == :passenger
                  TrainPassenger.new(id, type, company)
-               elsif type == 'грузовой'
+               else type == :cargo
                  TrainCargo.new(id, type, company) # любой некорретный тип уходит сюда
-               else
-                 puts 'Поезд не создан'
+              #  else
+              #    puts 'Поезд не создан'
                end
-    if %w[пассажирский грузовой].include?(type)
-      puts "#{type.capitalize} поезд #{id} успешно создан. Производитель: #{company}."
-    else
-      puts 'Введён неверный тип поезда'
-    end
+    puts "#{type.capitalize} поезд #{id} успешно создан. Производитель: #{company}."
+    rescue RuntimeError => e
+    puts e.message
+    retry
   end
 
   # создавать маршруты и управлять станциями в нем (добавлять, удалять)
@@ -113,18 +115,21 @@ class Main
   # добавлять вагоны к поезду
   def add_wagon
     number = ask('Введите номер вагона')
-    wagon_type = ask('Введите тип вагона: пассажирский или грузовой')
+    wagon_type = ask_symbol('Введите тип вагона: passenger или cargo')
     company = ask('Введите название производителя вагона')
     case wagon_type
-    when 'пассажирский'
+    when :passenger
       wagon = WagonPassenger.new(number, company)
-    when 'грузовой'
+    when :cargo
       wagon = WagonCargo.new(number, company)
     end
     id = ask('Введите номер поезда, к которому нужно прицепить вагон')
     train(id).add_wagon(wagon)
     puts "#{wagon_type.capitalize} вагон #{number}, производителя #{company} успешно создан. " \
          "Вагон прицеплён к поезду #{id}."
+    rescue RuntimeError => e
+    puts e.message
+    retry
   end
 
   # отцеплять вагоны от поезда
@@ -167,6 +172,11 @@ class Main
   def ask(question)
     puts question
     gets.chomp
+  end
+
+  def ask_symbol(question)
+    puts question
+    gets.chomp.to_sym
   end
 
   def ask_integer(question)

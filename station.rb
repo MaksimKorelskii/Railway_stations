@@ -10,24 +10,38 @@ class Station
     @trains = []
     @@stations << self
     register_instance
+    validate!
+  end
+
+  def valid?
+    validate!
+    true
+  rescue
+    false
   end
 
   def self.all
     @@stations
   end
 
-  # может принимать поезда
+  # принимает поезда
   def take_train(train)
     trains << train
   end
 
-  # может поазывать список id поездов по типу
+  # возвращает список id поездов по типу
   def train_list(type)
     trains.each { |train| puts train.id if train.type == type }
   end
 
-  # может отправлять поезда
+  # отправляет поезда
   def send_train(train)
     trains.delete(train) if trains.include?(train)
+  end
+
+  private
+
+  def validate!
+    raise "Не указано название станции" if name == ""
   end
 end
