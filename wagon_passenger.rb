@@ -3,6 +3,6 @@ class WagonPassenger < Wagon
 
   def initialize(number, company)
     super(number, company)
-    @type = 'пассажирский'
+    @type = :passenger
   end
 end

@@ -3,6 +3,6 @@ class WagonCargo < Wagon
 
   def initialize(number, company)
     super(number, company)
-    @type = 'грузовой'
+    @type = :cargo
   end
 end
