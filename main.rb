@@ -25,6 +25,8 @@ class Main
     { id: 10, title: 'переместить поезд назад', action: :move_back },
     { id: 11, title: 'показать станции на маршруте', action: :list_stations },
     { id: 12, title: 'показать список поездов на станции', action: :list_trains_on_station },
+    { id: 13, title: 'показать список вагонов у поезда', action: :wagons_list },
+    { id: 14, title: 'занять место/объём в вагоне', action: :take_spaces }
   ].freeze
 
   def initialize
@@ -118,9 +120,11 @@ class Main
     company = ask('Введите название производителя вагона')
     case wagon_type
     when :passenger
-      wagon = WagonPassenger.new(number, company)
+      total_space = ask_integer('Введите количество мест в вагоне')
+      wagon = WagonPassenger.new(number, company, total_space)
     when :cargo
-      wagon = WagonCargo.new(number, company)
+      total_space = ask_integer('Введите объём грузового вагона')
+      wagon = WagonCargo.new(number, company, total_space)
     end
     id = ask('Введите номер поезда, к которому нужно прицепить вагон')
     train(id).add_wagon(wagon)
@@ -160,10 +164,53 @@ class Main
     route(start_station, finish_station).show_route
   end
 
+  # def list_trains_on_station
+  #   station_name = ask("Введите название станции")
+  #   type = ask("Введите тип поезда (пассажирский или грузовой)")
+  #   find_station(station_name).train_list(type)
+  # end
+
   def list_trains_on_station
-    station_name = ask("Введите название станции")
-    type = ask("Введите тип поезда (пассажирский или грузовой)")
-    find_station(station_name).train_list(type)
+    station_name = ask('Введите название станции')
+    find_station(station_name).trains_on_station do |train|
+      puts "#{train.type.capitalize} поезд #{train.id}, количество вагонов: #{train.amount_of_wagons}"
+    end
+  end
+
+  # показать список вагонов у поезда
+  def wagons_list
+    id = ask('Введите номер поезда')
+    train(id).wagons_of_train do |wagon|
+      if wagon.type == :passenger
+        puts "#{wagon.type.capitalize} вагон #{wagon.number}, " \
+             "количество свободных мест: #{wagon.free_space}, " \
+             "количество занятых мест: #{wagon.occupied_space}."
+      else
+        puts "#{wagon.type.capitalize} вагон #{wagon.number}, " \
+             "количество свободного объёма: #{wagon.free_space}, " \
+             "количество занятого объёма: #{wagon.occupied_space}."
+      end
+    end
+  end
+
+  def take_spaces
+    id = ask('Введите номер поезда')
+    number = ask('Введите номер вагона')
+    if train(id).type == :passenger
+      wagon_of_train(id, number).take_space
+      puts "Вы заняли одно место в вагоне #{number} поезда #{id}. " \
+           "Всего мест #{wagon_of_train(id, number).total_space}, " \
+           "свободно #{wagon_of_train(id, number).free_space}."
+    else
+      puts "Объём вагона: #{wagon_of_train(id, number).total_space}, " \
+           "свободно: #{wagon_of_train(id, number).free_space}."
+      volume = ask_integer('Введите объём загрузки')
+      wagon_of_train(id, number).take_space(volume)
+      puts "Вы загрузили #{volume} в вагон #{number} поезда #{id}."
+    end
+  rescue RuntimeError => e
+    puts e.message
+    retry
   end
 
   private
