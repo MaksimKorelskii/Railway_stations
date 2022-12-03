@@ -28,11 +28,6 @@ class Station
     trains << train
   end
 
-  # возвращает список id поездов по типу
-  # def train_list(type)
-  #   trains.each { |train| puts train.id if train.type == type }
-  # end
-
   # отправляет поезда
   def send_train(train)
     trains.delete(train) if trains.include?(train)

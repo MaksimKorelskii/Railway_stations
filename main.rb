@@ -164,12 +164,6 @@ class Main
     route(start_station, finish_station).show_route
   end
 
-  # def list_trains_on_station
-  #   station_name = ask("Введите название станции")
-  #   type = ask("Введите тип поезда (пассажирский или грузовой)")
-  #   find_station(station_name).train_list(type)
-  # end
-
   def list_trains_on_station
     station_name = ask('Введите название станции')
     find_station(station_name).trains_on_station do |train|
