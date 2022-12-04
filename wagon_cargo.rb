@@ -11,6 +11,5 @@ class WagonCargo < Wagon
     raise 'В вагоне нет свободного места' if free_space.zero?
 
     self.occupied_space += volume
-    self.free_space -= volume
   end
 end

@@ -10,6 +10,5 @@ class WagonPassenger < Wagon
     raise 'В вагоне нет свободных мест' if free_space.zero?
 
     self.occupied_space += 1
-    self.free_space -= 1
   end
 end
