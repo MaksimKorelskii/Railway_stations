@@ -21,6 +21,10 @@ class Train
     @@trains << self
   end
 
+  def wagons_of_train(&block)
+    wagons.each { |wagon| block.call(wagon) }
+  end
+
   def self.find(id)
     @@trains.find { |train| train.id == id }
   end

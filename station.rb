@@ -14,6 +14,11 @@ class Station
     register_instance
   end
 
+  def trains_on_station(&block)
+    trains.each { |train| block.call(train) } unless trains.empty?
+    puts 'Поездов нет.' if trains.empty?
+  end
+
   def self.all
     @@stations
   end
@@ -21,11 +26,6 @@ class Station
   # принимает поезда
   def take_train(train)
     trains << train
-  end
-
-  # возвращает список id поездов по типу
-  def train_list(type)
-    trains.each { |train| puts train.id if train.type == type }
   end
 
   # отправляет поезда
