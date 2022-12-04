@@ -36,6 +36,6 @@ class Station
   private
 
   def validate!
-    raise "Не указано название станции" if name == ""
+    raise 'Не указано название станции' if name == ''
   end
 end

@@ -25,9 +25,9 @@ class Wagon
   def validate!
     errors = []
 
-    errors << "Не указан номер вагона" if number == ""
-    errors << "Не указано название компании изготовителя вагона" if company == ""
-    errors << "Неверный формат номера вагона" if number !~ NUMBER_FORMAT
+    errors << 'Не указан номер вагона' if number == ''
+    errors << 'Не указано название компании изготовителя вагона' if company == ''
+    errors << 'Неверный формат номера вагона' if number !~ NUMBER_FORMAT
 
     raise errors.join('. ') unless errors.empty?
   end
