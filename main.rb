@@ -63,7 +63,7 @@ class Main
     puts "Станция #{name} успешно создана."
   rescue RuntimeError => e
     puts e.message
-    retry    
+    retry
   end
 
   # создавать поезда
@@ -73,11 +73,11 @@ class Main
     company = ask('Введите название производителя поезда')
     @trains << if type == :passenger
                  TrainPassenger.new(id, type, company)
-               else type == :cargo
+               else
                  TrainCargo.new(id, type, company) # любой некорретный тип уходит сюда
                end
     puts "#{type.capitalize} поезд #{id} успешно создан. Производитель: #{company}."
-    rescue RuntimeError => e
+  rescue RuntimeError => e
     puts e.message
     retry
   end
@@ -130,7 +130,7 @@ class Main
     train(id).add_wagon(wagon)
     puts "#{wagon_type.capitalize} вагон #{number}, производителя #{company} успешно создан. " \
          "Вагон прицеплён к поезду #{id}."
-    rescue RuntimeError => e
+  rescue RuntimeError => e
     puts e.message
     retry
   end

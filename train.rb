@@ -44,7 +44,7 @@ class Train
 
   def add_wagon(wagon)
     wagons << wagon if wagon.type == type && speed.zero?
-    raise RuntimeError, "Несовпадение типов поезда и вагона!" if wagon.type != type
+    raise 'Несовпадение типов поезда и вагона!' if wagon.type != type
   end
 
   def delete_wagon(wagon)
@@ -96,12 +96,12 @@ class Train
   def validate!
     errors = []
 
-    errors << "Не указан номер поезда" if id == ""
-    errors << "Не указано название компании изготовителя поезда" if company == ""
-    errors << "Неверный формат номера поезда" if id !~ ID_FORMAT
-    errors << "Вы не указали тип поезда. Введите: passenger или cargo" if type.nil?
-    errors << "Неверный тип поезда, введите: passenger или cargo" unless [:passenger, :cargo].include?(@type)
-  
+    errors << 'Не указан номер поезда' if id == ''
+    errors << 'Не указано название компании изготовителя поезда' if company == ''
+    errors << 'Неверный формат номера поезда' if id !~ ID_FORMAT
+    errors << 'Вы не указали тип поезда. Введите: passenger или cargo' if type.nil?
+    errors << 'Неверный тип поезда, введите: passenger или cargo' unless %i[passenger cargo].include?(@type)
+
     raise errors.join('. ') unless errors.empty?
   end
 end
