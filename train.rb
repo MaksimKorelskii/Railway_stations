@@ -2,10 +2,20 @@ class Train
   include Company
   include InstanceCounter
   include Validation
+  include Accessors
 
   ID_FORMAT = /^[0-9a-zа-я]{3}-?[0-9a-zа-я]{2}$/i.freeze # формат ххх-хх
 
   attr_reader :wagons, :previous_station, :next_station, :type, :route, :current_station, :id, :speed, :company
+
+  attr_accessor_with_history :speed
+  strong_attr_accessor :id, String
+
+  validate :id, :presence
+  validate :id, :format, ID_FORMAT
+  validate :id, :type, String
+  validate :company, :presence
+  validate :type, :presence
 
   @@trains = []
 
@@ -17,6 +27,7 @@ class Train
     @route = nil
     @company = company
     validate!
+    validate_type_train!
     register_instance
     @@trains << self
   end
@@ -93,15 +104,7 @@ class Train
 
   protected
 
-  def validate!
-    errors = []
-
-    errors << 'Не указан номер поезда' if id == ''
-    errors << 'Не указано название компании изготовителя поезда' if company == ''
-    errors << 'Неверный формат номера поезда' if id !~ ID_FORMAT
-    errors << 'Вы не указали тип поезда. Введите: passenger или cargo' if type.nil?
-    errors << 'Неверный тип поезда, введите: passenger или cargo' unless %i[passenger cargo].include?(@type)
-
-    raise errors.join('. ') unless errors.empty?
+  def validate_type_train!
+    raise 'Неверный тип поезда, введите: passenger или cargo' unless %i[passenger cargo].include?(@type)
   end
 end
