@@ -1,3 +1,4 @@
+require_relative 'accessors'
 require_relative 'validation'
 require_relative 'instance_counter'
 require_relative 'company'
@@ -88,6 +89,9 @@ class Main
     finish_station = ask('Введите конец маршрута')
     @routes << Route.new(find_station(start_station), find_station(finish_station))
     puts "Маршрут с начальной станцией #{start_station} и конечной станцией #{finish_station} успешно создан."
+  rescue RuntimeError => e
+    puts e.message
+    retry
   end
 
   def add_station

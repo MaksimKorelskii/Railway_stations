@@ -6,6 +6,11 @@ class Wagon
 
   attr_reader :number, :company, :total_space, :occupied_space
 
+  validate :number, :presence
+  validate :number, :format, NUMBER_FORMAT
+  validate :company, :presence
+  validate :total_space, :presence
+
   def initialize(number, company, total_space)
     @number = number
     @company = company
@@ -21,14 +26,4 @@ class Wagon
   protected
 
   attr_writer :occupied_space
-
-  def validate!
-    errors = []
-
-    errors << 'Не указан номер вагона' if number == ''
-    errors << 'Не указано название компании изготовителя вагона' if company == ''
-    errors << 'Неверный формат номера вагона' if number !~ NUMBER_FORMAT
-
-    raise errors.join('. ') unless errors.empty?
-  end
 end
