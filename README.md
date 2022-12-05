@@ -1,5 +1,5 @@
-# Railway_stations2
+# Railway_stations
 
-# Учебный проект курса "Профессиональная разработка на Ruby on Rails"
-# Часть 1 - "Основы Ruby"
-# от школы thinknetica.com
+## Учебный проект по курсу "Основы Ruby"
+
+### онлайн школа Thinknetica
